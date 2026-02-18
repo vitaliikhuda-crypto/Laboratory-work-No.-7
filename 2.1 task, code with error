@@ -1,0 +1,31 @@
+using System;
+
+class BankTerminal
+{
+    public Action<int> OnMoneyWithdraw;
+
+    public void Withdraw(int amount)
+    {
+        Console.WriteLine($"Знято {amount} грн");
+        OnMoneyWithdraw?.Invoke(amount);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        BankTerminal terminal = new BankTerminal();
+
+        terminal.OnMoneyWithdraw += amount =>
+            Console.WriteLine($"SMS: З рахунку знято {amount} грн");
+
+        //  "Злом" №1
+        terminal.OnMoneyWithdraw = null;
+
+        //  "Злом" №2
+        terminal.OnMoneyWithdraw?.Invoke(99999);
+
+        terminal.Withdraw(500);
+    }
+}
